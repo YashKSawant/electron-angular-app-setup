@@ -1,14 +1,45 @@
 {
   "name": "electron-app",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng build --base-href ./ && electron .",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron": "electron .",
+    "electron:serve": "cross-env NODE_ENV=development concurrently \"ng serve\" \"wait-on http://localhost:4200 && electron .\"",
+    "build": "ng build --base-href ./ && electron-builder",
+    "build:win": "npm run build && electron-builder --win"
   },
+  "main": "main.js",
   "private": true,
+  "build": {
+    "appId": "com.example.myapp",
+    "productName": "Electron Angular App", 
+    "directories": {
+      "output": "dist", 
+      "buildResources": "public/"
+    },
+    "files": [
+      "dist/**/*", 
+      "main.js",
+      "package.json",
+      "public/**/*"
+    ],
+    "win": {
+      "icon": "public/favicon.ico",
+      "target": ["nsis"] 
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/favicon.ico",
+      "uninstallerIcon": "public/favicon.ico",
+      "shortcutName": "Electron Angular App"
+    },
+    "artifactName": "${productName}-v${version}-setup.${ext}"
+  },
   "dependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/common": "^19.0.0",
@@ -27,12 +58,17 @@
     "@angular/cli": "^19.0.1",
     "@angular/compiler-cli": "^19.0.0",
     "@types/jasmine": "~5.1.0",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.2"
+    "typescript": "~5.6.2",
+    "wait-on": "^8.0.1"
   }
 }
